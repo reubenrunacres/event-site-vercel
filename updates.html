@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join Now</title>
+  <style>
+    /* Basic reset and typography */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    /* Theme variables from the main site */
+    :root {
+      --color-bg: #f8fafc;
+      --color-bg-alt: #ffffff;
+      --color-card-bg: rgba(255, 255, 255, 0.6);
+      --color-text: #1f2937;
+      --color-subtext: #475569;
+      --color-accent: #6366f1;
+      --color-accent-hover: #4f46e5;
+      --color-accent-border: rgba(99, 102, 241, 0.4);
+    }
+    body.dark {
+      --color-bg: #020617;
+      --color-bg-alt: rgba(2, 6, 23, 0.6);
+      --color-card-bg: rgba(2, 6, 23, 0.6);
+      --color-text: #e2e8f0;
+      --color-subtext: #94a3b8;
+      --color-accent: #6366f1;
+      --color-accent-hover: #4f46e5;
+      --color-accent-border: rgba(99, 102, 241, 0.4);
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.5;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    p.description {
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      color: var(--color-subtext);
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    input[type="email"] {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--color-subtext);
+      background: var(--color-card-bg);
+      color: var(--color-text);
+    }
+    input[type="email"]:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    button[type="submit"] {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      background: var(--color-accent);
+      color: var(--color-bg);
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:hover {
+      background: var(--color-accent-hover);
+    }
+    /* Theme toggle button */
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--color-card-bg);
+      border: 1px solid var(--color-accent-border);
+      border-radius: 9999px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      color: var(--color-accent);
+      transition: background 0.2s, color 0.2s;
+    }
+    .theme-toggle:hover {
+      background: var(--color-accent);
+      color: var(--color-bg);
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="theme-toggle" type="button"></button>
+  <div class="container">
+    <a href="index.html" class="back-link" style="display: inline-block; margin-bottom: 1rem; font-size: 0.875rem; color: var(--color-accent); text-decoration: none;">← Back to event</a>
+    <h1>Join Now</h1>
+    <p class="description">Enter your email to join our list and receive updates about this event.</p>
+    <!-- Use formsubmit.co to send the form data directly to your email address.
+         The service will forward the submission to you without requiring the
+         visitor to use their mail client. Replace the email in the action
+         attribute if you ever need to change the destination. -->
+    <form id="subscribe-form" action="https://formsubmit.co/reuben.runacres@alpha.school" method="POST">
+      <input type="email" name="email" id="email" placeholder="Email address" required />
+      <!-- Hidden field to customise the email subject -->
+      <input type="hidden" name="_subject" value="New event application" />
+      <!-- Optional: redirect to a thank-you page after successful submission -->
+      <!-- <input type="hidden" name="_next" value="thank-you.html" /> -->
+      <button type="submit">Apply now</button>
+    </form>
+  </div>
+  <script>
+    // Initialize theme based on system preference
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (prefersDark) {
+      document.body.classList.add('dark');
+    }
+    // Theme toggle handler with icon update
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const updateThemeIcon = () => {
+      if (document.body.classList.contains('dark')) {
+        themeToggleBtn.innerHTML = '🌙';
+      } else {
+        themeToggleBtn.innerHTML = '☀️';
+      }
+    };
+    updateThemeIcon();
+    themeToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      updateThemeIcon();
+    });
+
+    // No JavaScript handling for the form is needed when posting directly to
+    // formsubmit.co. The service will forward the form data to your email
+    // address and return a confirmation page automatically.
+  </script>
+</body>
+</html>

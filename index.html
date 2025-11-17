@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Landing Page</title>
+    <style>
+      /* Basic reset and typography */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      /*
+        CSS variables for theming. The :root values define the default (light) theme.
+        The body.dark selector overrides these variables for dark mode.
+      */
+      :root {
+        --color-bg: #f8fafc;
+        --color-bg-alt: #ffffff;
+        --color-card-bg: rgba(255, 255, 255, 0.6);
+        --color-text: #1f2937;
+        --color-subtext: #475569;
+        --color-accent: #6366f1; /* indigo accent color */
+        --color-accent-hover: #4f46e5;
+        --color-accent-border: rgba(99, 102, 241, 0.4);
+      }
+      body.dark {
+        --color-bg: #020617;
+        --color-bg-alt: rgba(2, 6, 23, 0.6);
+        --color-card-bg: rgba(2, 6, 23, 0.6);
+        --color-text: #e2e8f0;
+        --color-subtext: #94a3b8;
+        --color-accent: #6366f1;
+        --color-accent-hover: #4f46e5;
+        --color-accent-border: rgba(99, 102, 241, 0.4);
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        background: var(--color-bg);
+        color: var(--color-text);
+        line-height: 1.5;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      /* Container */
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      /* Hero image */
+      .hero-image {
+        width: 100%;
+        max-height: 40vh;
+        overflow: hidden;
+        border-radius: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .hero-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      /* Theme toggle button */
+      .theme-toggle {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--color-card-bg);
+        border: 1px solid var(--color-accent-border);
+        border-radius: 9999px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+        cursor: pointer;
+        color: var(--color-accent);
+        transition: background 0.2s, color 0.2s;
+      }
+      .theme-toggle:hover {
+        background: var(--color-accent);
+        color: var(--color-bg);
+      }
+      /* Hero Section */
+      header {
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+      header .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid var(--color-subtext);
+        background: var(--color-card-bg);
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        color: var(--color-subtext);
+      }
+      header .badge .dot {
+        width: 0.375rem;
+        height: 0.375rem;
+        border-radius: 50%;
+        background: var(--color-accent);
+      }
+      header h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        color: var(--color-text);
+      }
+      header p.tagline {
+        max-width: 32rem;
+        font-size: 1rem;
+        color: var(--color-subtext);
+        margin: 0 auto 1rem auto;
+      }
+      /* Info cards */
+      .info-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        justify-content: center;
+      }
+      .info-card {
+        border: 1px solid var(--color-subtext);
+        background: var(--color-card-bg);
+        border-radius: 1rem;
+        padding: 1rem;
+        flex: 1 1 160px;
+        min-width: 150px;
+      }
+      .info-card p.label {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        color: var(--color-text);
+      }
+      .info-card p.value {
+        color: var(--color-subtext);
+        font-size: 0.875rem;
+      }
+      /* Buttons */
+      .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        align-items: center;
+      }
+      .primary-btn,
+      .secondary-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.625rem 1.25rem;
+        border-radius: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: background 0.2s, border-color 0.2s;
+      }
+      .primary-btn {
+        background: var(--color-accent);
+        color: var(--color-bg);
+      }
+      .primary-btn:hover {
+        background: var(--color-accent-hover);
+      }
+      .secondary-btn {
+        border: 1px solid var(--color-subtext);
+        background: var(--color-card-bg);
+        color: var(--color-text);
+      }
+      .secondary-btn:hover {
+        border-color: var(--color-text);
+        background: var(--color-bg-alt);
+      }
+      /* Section container */
+      .section {
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+      .section-title {
+        flex: 1 1 200px;
+        max-width: 280px;
+      }
+      .section-title h2 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--color-subtext);
+        margin-bottom: 0.5rem;
+      }
+      .section-title p {
+        font-size: 0.875rem;
+        color: var(--color-subtext);
+      }
+      .section-content {
+        flex: 1 1 400px;
+      }
+      .section-content ul {
+        list-style: none;
+        padding-left: 0;
+        text-align: left;
+        margin: 0 auto;
+        display: inline-block;
+      }
+      .section-content li {
+        display: flex;
+        align-items: start;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--color-text);
+      }
+      .section-content li .bullet {
+        margin-top: 0.35rem;
+        width: 0.375rem;
+        height: 0.375rem;
+        border-radius: 50%;
+        background: var(--color-accent);
+        flex-shrink: 0;
+      }
+      /* FAQ Section container */
+      .faq-container {
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+        text-align: center;
+      }
+      .faq-list {
+        margin: 0 auto;
+        max-width: 600px;
+        text-align: left;
+      }
+      .faq-list details {
+        border: 1px solid transparent;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        transition: border-color 0.2s;
+        background: var(--color-card-bg);
+      }
+      .faq-list details:hover {
+        border-color: var(--color-subtext);
+      }
+      .faq-list summary {
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.875rem;
+        color: var(--color-text);
+      }
+      .faq-list summary span {
+        font-weight: 500;
+      }
+      .faq-list summary .symbol {
+        color: var(--color-subtext);
+        margin-left: 0.5rem;
+        font-size: 0.75rem;
+      }
+      .faq-list details[open] summary .symbol {
+        display: none;
+      }
+      .faq-list details[open] summary .symbol-open {
+        display: inline;
+      }
+      .faq-list details .answer {
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--color-subtext);
+      }
+      .final-cta {
+        max-width: 480px;
+        margin: 0 auto;
+        border: 1px solid var(--color-accent-border);
+        border-radius: 1rem;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), var(--color-bg));
+        padding: 1.5rem;
+        color: var(--color-text);
+      }
+      .final-cta h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--color-accent);
+      }
+      .final-cta p {
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+        color: var(--color-subtext);
+      }
+      .final-cta .cta-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .final-cta .cta-buttons a {
+        padding: 0.5rem 1rem;
+        border-radius: 0.75rem;
+        text-align: center;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: background 0.2s, border-color 0.2s;
+      }
+      .final-cta .cta-buttons .primary {
+        background: var(--color-accent);
+        color: var(--color-bg);
+      }
+      .final-cta .cta-buttons .primary:hover {
+        background: var(--color-accent-hover);
+      }
+      .final-cta .cta-buttons .secondary {
+        border: 1px solid var(--color-accent-border);
+        background: var(--color-card-bg);
+        color: var(--color-accent);
+      }
+      .final-cta .cta-buttons .secondary:hover {
+        border-color: var(--color-accent-hover);
+      }
+      footer {
+        border-top: 1px solid var(--color-subtext);
+        padding-top: 1rem;
+        font-size: 0.75rem;
+        color: var(--color-subtext);
+        text-align: center;
+      }
+    
+/* New hero banner full-width section with background image */
+.hero-banner {
+  position: relative;
+  width: 100%;
+  min-height: 70vh;
+  background-image: url('./hero.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  color: #ffffff;
+}
+.hero-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+.hero-banner > * {
+  position: relative;
+  z-index: 1;
+}
+/* Position theme toggle inside hero */
+.hero-banner .theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+/* Style for info cards within hero */
+.hero-banner .info-grid {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.hero-banner .info-card {
+  flex: 1 1 160px;
+  min-width: 150px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+}
+.hero-banner .info-card p.label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #ffffff;
+}
+.hero-banner .info-card p.value {
+  font-size: 0.875rem;
+  color: #e0e7ff;
+}
+/* Buttons layout inside hero */
+.hero-banner .buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+/* Sections container displayed as columns */
+#sections-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.section {
+  /* Single description section should span most of the space */
+  width: 80%;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid var(--color-accent-border);
+  border-radius: 1rem;
+  background: var(--color-card-bg);
+  padding: 2rem;
+}
+.section h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+.section p {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+</style>
+  </head>
+  <body>
+
+<!-- Hero banner with full-width background image -->
+<section class="hero-banner">
+  <button class="theme-toggle" id="theme-toggle" type="button"></button>
+  <div class="badge">
+    <div class="dot"></div>
+    <span id="badge-text">Early interest list</span>
+  </div>
+  <h1 id="event-name">Event Name</h1>
+  <!-- Info cards displayed within the hero -->
+  <div class="info-grid">
+    <div class="info-card" id="when-card">
+      <p class="label">When</p>
+      <p class="value" id="event-date">Date</p>
+      <p class="value" id="event-time">Time</p>
+    </div>
+    <div class="info-card" id="where-card">
+      <p class="label">Where</p>
+      <p class="value" id="event-location-name">Location Name</p>
+      <p class="value" id="event-location-address">Location Address</p>
+    </div>
+    <div class="info-card" id="spots-card">
+      <p class="label">Spots</p>
+      <p class="value" id="event-capacity">Capacity</p>
+      <p class="value" id="event-price">Price</p>
+    </div>
+  </div>
+  <!-- Primary and secondary call to action buttons -->
+  <div class="buttons">
+    <!-- Single call-to-action button -->
+    <a class="secondary-btn" id="cta-secondary" href="#">Secondary</a>
+  </div>
+</section>
+
+
+    <div class="container">
+      
+
+      <!-- Info sections -->
+      <div id="sections-container"></div>
+      </div>
+    <script>
+      // Define the event configuration object. Modify this object to update the page content.
+      const eventConfig = {
+        name: "Austin IRL Mens Dinner",
+        tagline: "A zero pressure night to meet driven guys in Austin.",
+        // Update the date for the event
+        date: "November 2, 2025",
+        time: "7:00 pm – 10:00 pm",
+        // Update venue details for the West Lake Austin's Pizza location
+        locationName: "Austin's Pizza (Westlake)",
+        locationAddress: "3638 Bee Caves Rd, West Lake Hills, TX 78746",
+        // Limit the event to 30 people
+        capacity: "30 people",
+        price: "TBD",
+        // Event description to display in a single info card
+        description: "Join us for an evening of connection, great pizza, and strategy driven games. Meet a curated group of young men at Austins Pizza Westlake, share slices, and compete in games like Catan and poker.",
+        // Hero image for the top of the page. Set to an empty string if not desired.
+        heroImageSrc: "", // e.g. "./images/hero.jpg" or remote URL
+        heroImageAlt: "Hero image",
+        ctaPrimaryLabel: "Apply for a spot",
+        ctaPrimaryHref: "https://forms.gle/your-form-here",
+        // Use a single button labelled Apply now that links to the local signup page
+        ctaSecondaryLabel: "Apply now",
+        ctaSecondaryHref: "updates.html",
+        // Sections have been condensed into a single description above
+        sections: {},
+        finalCTA: {
+          title: "Want first access when we lock the date",
+          description:
+            "Drop your email or apply for a spot. We will only email you about this event and closely related hangouts.",
+          primaryLabel: "Apply for a spot",
+          primaryHref: "https://forms.gle/your-form-here",
+          secondaryLabel: "Get event updates",
+          secondaryHref:
+            "mailto:youremail@yourdomain.com?subject=Austin%20IRL%20event%20updates",
+          footerText:
+            "Built for guys in Austin who are tired of trying to fix loneliness from behind a screen.",
+        },
+      };
+
+      // Populate the page with eventConfig data
+      document.getElementById("event-name").textContent = eventConfig.name;
+      document.getElementById("event-date").textContent = eventConfig.date;
+      document.getElementById("event-time").textContent = eventConfig.time;
+      document.getElementById("event-location-name").textContent = eventConfig.locationName;
+      document.getElementById("event-location-address").textContent =
+        eventConfig.locationAddress;
+      document.getElementById("event-capacity").textContent = eventConfig.capacity;
+      document.getElementById("event-price").textContent = eventConfig.price;
+      // Set up the single call-to-action button
+      const ctaSecondary = document.getElementById("cta-secondary");
+      ctaSecondary.textContent = eventConfig.ctaSecondaryLabel;
+      ctaSecondary.href = eventConfig.ctaSecondaryHref;
+
+      // Render a single info card with the event description
+      const sectionsContainer = document.getElementById("sections-container");
+      sectionsContainer.innerHTML = "";
+      const descSection = document.createElement("div");
+      descSection.className = "section";
+      const descPara = document.createElement("p");
+      descPara.textContent = eventConfig.description;
+      descSection.appendChild(descPara);
+      sectionsContainer.appendChild(descSection);
+
+            // Hero image is now set via CSS background on the hero banner.
+
+      // Initialize theme based on system preference
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        document.body.classList.add('dark');
+      }
+      // Theme toggle handler with icon update
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const updateThemeIcon = () => {
+        // Show moon icon when dark, sun when light
+        if (document.body.classList.contains('dark')) {
+          themeToggleBtn.innerHTML = '🌙';
+        } else {
+          themeToggleBtn.innerHTML = '☀️';
+        }
+      };
+      // Initialize icon
+      updateThemeIcon();
+      themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        updateThemeIcon();
+      });
+    </script>
+  </body>
+</html>
